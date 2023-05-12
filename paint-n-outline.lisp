@@ -2,15 +2,26 @@
 
 (in-package #:rl-mapper)
   
-(defun paint (char)
+(defun paint (char &optional erase)
   (blt:print 0 0 "Press 'p' to finish the painting.")
-  (when (and (mouse-move)
-	     (eq (blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\SPACE))
-    (map-action (complex (blt:mouse-x) (blt:mouse-y)) char))
+  (setf (blt:layer) 1
+	(blt:color) *highlight-color*
+	(blt:cell-char (blt:mouse-x) (blt:mouse-y)) (if erase #\X char)
+	(blt:color) *default-color*
+	(blt:layer) 0)
+  (when (mouse-move)
+    (if erase
+	(map-action (complex (blt:mouse-x) (blt:mouse-y)) #\SPACE)
+	(when (eq (blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\SPACE)
+	  (map-action (complex (blt:mouse-x) (blt:mouse-y)) char))))
   (blt:refresh)
-  (if (blt:key-case (blt:read) (:p))
+  (setf (blt:layer) 1
+	(blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\SPACE
+	(blt:layer) 0)
+  (if (or (and (null erase) (blt:key-case (blt:read) (:p)))
+	  (and erase (blt:key-case (blt:read) (:e))))
       (blt:print 0 0 "                                 ")
-      (paint char)))
+      (paint char erase)))
 
 (defun fix-line (newxy oldxy hash)
   (labels ((sharp-helper (a b) 
@@ -37,6 +48,11 @@
 
 (defun outline (hash pen-type &optional oldxy)
   (blt:print 0 0 "Press 'w' to finish the outline.")
+  (setf (blt:layer) 1
+	(blt:cell-char (blt:mouse-x) (blt:mouse-y)) #\o)
+  (when oldxy (setf (blt:cell-char (realpart oldxy) (imagpart oldxy))
+		    #\SPACE))
+  (setf (blt:layer) 0)
   (let* ((newxy (complex (blt:mouse-x) (blt:mouse-y)))
 	 (midxy  (when oldxy (fix-line newxy oldxy hash)))
 	 (newhash (make-hash-table)))
