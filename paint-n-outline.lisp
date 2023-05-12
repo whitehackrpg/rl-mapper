@@ -41,10 +41,10 @@
 	       mid)))
     (let ((diff (- newxy oldxy)))
       (case diff
-	(#C(1 1) (print 1) (extra-sharp 0 1))
-	(#C(-1 -1) (print 2) (extra-sharp 0 -1))
-	(#C(1 -1) (print 3) (extra-sharp -1 0))
-	(#C(-1 1) (print 4) (extra-sharp 1 0))))))
+	(#C(1 1) (extra-sharp 0 1))
+	(#C(-1 -1) (extra-sharp 0 -1))
+	(#C(1 -1) (extra-sharp -1 0))
+	(#C(-1 1) (extra-sharp 1 0))))))
 
 (defun outline (hash pen-type &optional oldxy)
   (blt:print 0 0 "Press 'w' to finish the outline.")
@@ -68,7 +68,7 @@
       (setf (gethash newxy newhash) (gethash newxy hash)
 	    oldxy newxy)
       (blt:refresh))
-    (if (blt:key-case (blt:read) (:w))
+    (if (blt:key-case (blt:read) (:o))
 	(blt:print 0 0 "                                ")
 	(outline newhash pen-type oldxy))))
 
