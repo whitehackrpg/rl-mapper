@@ -14,6 +14,8 @@ Then:
 
 Now you can use the functions in the REPL:
 
-https://user-images.githubusercontent.com/130791778/235418561-29cb987e-004c-453c-b4be-7990cabe8d8c.mp4
+https://github.com/whitehackrpg/rl-mapper/assets/130791778/d8d5bc07-a86e-4775-b02e-60b64f8f55ec
+
+
 
 
